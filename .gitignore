@@ -1,0 +1,4 @@
+libasyncsql.a
+tmp
+Makefile
+.*.sw*
