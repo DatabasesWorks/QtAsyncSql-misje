@@ -168,6 +168,7 @@ bool ConnectionManager::open(QSqlError *error)
 	dbconn.setUserName(_userName);
 	dbconn.setPassword(_password);
 	dbconn.setPort(_port);
+	dbconn.setNumericalPrecisionPolicy(_precisionPolicy);
 
 	bool ok = dbconn.open();
 
