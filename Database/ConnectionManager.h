@@ -105,7 +105,7 @@ public:
 	 * @brief Opens a database connection for current thread.
 	 * @returns \c true on success
 	 */
-	bool open();
+	bool open(QSqlError *error = nullptr);
 
 	/**
 	 * @brief Check if a connection exists for current thread.

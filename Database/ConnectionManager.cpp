@@ -141,7 +141,7 @@ bool ConnectionManager::connectionExists(QThread* t /*= QThread::currentThread()
 	return _conns.contains(t);
 }
 
-bool ConnectionManager::open()
+bool ConnectionManager::open(QSqlError *error)
 {
 	QMutexLocker locker(&_mutex);
 
@@ -155,6 +155,14 @@ bool ConnectionManager::open()
 
 	QString conname = QString("CNM0x%1") .arg((qlonglong)curThread, 0, 16);
 	QSqlDatabase dbconn = QSqlDatabase::addDatabase(_type, conname);
+	if (!dbconn.isValid()) {
+		if (error)
+			*error = dbconn.lastError();
+
+		dbconn = {};
+		dbconn.removeDatabase(conname);
+		return false;
+	}
 	dbconn.setHostName(_hostName);
 	dbconn.setDatabaseName(_databaseName);
 	dbconn.setUserName(_userName);
@@ -166,6 +174,9 @@ bool ConnectionManager::open()
 	if (ok != true) {
 		qCCritical(logger) << "ConnectionManager::open: con= " << conname
 			<< ": Connection error=" << dbconn.lastError().text();
+		if (error)
+			*error = dbconn.lastError();
+
 		return false;
 	}
 

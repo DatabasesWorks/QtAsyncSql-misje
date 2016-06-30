@@ -36,10 +36,14 @@ void SqlTaskPrivate::run()
 {
 	Q_ASSERT(_instance);
 
+	AsyncQueryResult result;
 	ConnectionManager* conmgr = ConnectionManager::instance();
 	if (!conmgr->connectionExists()) {
-		bool ret = conmgr->open();
-		Q_ASSERT(ret);
+		if (!conmgr->open(&result._error))
+		{
+			_instance->taskCallback(result);
+			return;
+		}
 	}
 
 	QSqlDatabase db = conmgr->threadConnection();
@@ -49,7 +53,6 @@ void SqlTaskPrivate::run()
 		QThread::currentThread()->msleep(_delayMs);
 	}
 
-	AsyncQueryResult result;
 	QSqlQuery query = QSqlQuery(db);
 	bool succ = true;
 	if (_query.isPrepared) {
