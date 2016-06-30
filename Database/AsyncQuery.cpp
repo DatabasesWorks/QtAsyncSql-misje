@@ -2,7 +2,6 @@
 #include "ConnectionManager.h"
 
 #include <QRunnable>
-#include <QElapsedTimer>
 #include <QSqlQuery>
 #include <QThreadPool>
 #include <QQueue>
@@ -35,9 +34,6 @@ SqlTaskPrivate::SqlTaskPrivate(AsyncQuery *instance, AsyncQuery::QueuedQuery que
 
 void SqlTaskPrivate::run()
 {
-	QElapsedTimer timer;
-	timer.start();
-
 	Q_ASSERT(_instance);
 
 	ConnectionManager* conmgr = ConnectionManager::instance();
