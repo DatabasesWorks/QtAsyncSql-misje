@@ -123,6 +123,26 @@ public:
 	static void startExecOnce(const QString& query, QObject* receiver,const char* member);
 
 	/**
+	 * @brief Convinience function to start a AsyncQuery once with given slot as result
+	 * handler.
+	 * @details Sample Usage:
+	 * \code{.cpp}
+	 * Database::AsyncQuery::startExecOnce(
+	 *        "SELECT name FROM sqlite_master WHERE type='table'",
+	 *        this, &MyObject::myExecDoneHandler);
+	 * \endcode
+	 */
+	template <typename Object>
+	static inline void startExecOnce(const QString &query, const Object *object,
+			void (Object::*slot)(const AsyncQueryResult &))
+	{
+		AsyncQuery * q = new AsyncQuery();
+		q->_deleteOnDone =true;
+		connect(q, &AsyncQuery::execDone, object, slot);
+		q->startExec(query);
+	}
+
+	/**
 	 * @brief Convinience function to start a AsyncQuery once with given lambda function
 	 * as result handler.
 	 * @details Sample Usage:
