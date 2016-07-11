@@ -28,6 +28,11 @@ public:
 	AsyncQuery *asyncQuery() const;
 
 	/**
+	 * @brief Retrieve the sql error of the query.
+	 */
+	QSqlError error() const;
+
+	/**
 	 * @brief Convinience function to start the an query. The model will be updated
 	 * when finsihed.
 	 */

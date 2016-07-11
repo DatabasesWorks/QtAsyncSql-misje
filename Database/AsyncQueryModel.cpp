@@ -25,6 +25,11 @@ AsyncQuery *AsyncQueryModel::asyncQuery() const
 	return _aQuery;
 }
 
+QSqlError AsyncQueryModel::error() const
+{
+	return _res.error();
+}
+
 void AsyncQueryModel::startExec(const QString &query)
 {
 	_aQuery->startExec(query);
