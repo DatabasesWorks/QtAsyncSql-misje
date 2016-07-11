@@ -131,6 +131,11 @@ bool AsyncQuery::isRunning() const
 	return (_taskCnt > 0);
 }
 
+QString AsyncQuery::query() const
+{
+	return _curQuery.query;
+}
+
 AsyncQueryResult AsyncQuery::result() const
 {
 	QMutexLocker lock(&_mutex);

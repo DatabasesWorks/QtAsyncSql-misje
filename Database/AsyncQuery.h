@@ -78,6 +78,8 @@ public:
 	 */
 	bool isRunning() const;
 
+	QString query() const;
+
 	/**
 	 * @brief Retrieve the result of the last query
 	 */
