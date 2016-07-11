@@ -1,4 +1,4 @@
-#include "AsynqQueryModel.h"
+#include "AsyncQueryModel.h"
 
 #include "AsyncQuery.h"
 
