@@ -8,7 +8,7 @@ namespace Database {
 
 AsyncQueryModel::AsyncQueryModel(QObject* parent)
 	: QAbstractTableModel(parent)
-	, logger("Database.AsyncQuerModel")
+	, logger("Database.AsyncQueryModel")
 {
 	_aQuery = new AsyncQuery(this);
 	connect (_aQuery, SIGNAL(execDone(Database::AsyncQueryResult)),
