@@ -30,6 +30,13 @@ void AsyncQueryModel::startExec(const QString &query)
 	_aQuery->startExec(query);
 }
 
+void AsyncQueryModel::clear()
+{
+	beginResetModel();
+	_res = {};
+	endResetModel();
+}
+
 int AsyncQueryModel::rowCount(const QModelIndex &parent) const
 {
 	Q_UNUSED(parent);

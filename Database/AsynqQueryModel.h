@@ -32,6 +32,7 @@ public:
 	 * when finsihed.
 	 */
 	void startExec(const QString &query);
+	void clear();
 
 	/** @name QAbstractItemModel interface */
 	///@{
