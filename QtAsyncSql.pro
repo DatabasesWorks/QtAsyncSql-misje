@@ -11,10 +11,12 @@ SOURCES 				+= \
 							Database/AsyncQuery.cpp \
 							Database/AsyncQueryResult.cpp \
 							Database/ConnectionManager.cpp \
-							Database/AsyncQueryModel.cpp
+							Database/AsyncQueryModel.cpp \
+							Database/AsyncQueryQMLModel.cpp
 
 HEADERS 				+= \
 							Database/AsyncQuery.h \
 							Database/AsyncQueryResult.h \
 							Database/ConnectionManager.h \
-							Database/AsyncQueryModel.h
+							Database/AsyncQueryModel.h \
+							Database/AsyncQueryQMLModel.h
