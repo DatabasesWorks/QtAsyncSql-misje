@@ -110,6 +110,10 @@ Which can be used as follows:
 //signal slot style
  Database::AsyncQuery::startExecOnce("SELECT name FROM sqlite_master WHERE type='table'",
 	this, SLOT(myExecDoneHandler(const Database::AsyncQueryResult &)));
+//or
+ Database::AsyncQuery::startExecOnce("SELECT name FROM sqlite_master WHERE type='table'",
+   this, &MyObject::myExecDoneHandler);
+
 //and lambda style
 Database::AsyncQuery::startExecOnce("SELECT name FROM sqlite_master WHERE type='table'",
 	 [=](const Database::AsyncQueryResult& res) {
