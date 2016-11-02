@@ -32,6 +32,12 @@ class ConnectionManager : public QObject
 
 	/** Number if open connections. */
 	Q_PROPERTY(int connectionCount READ connectionCount NOTIFY connectionCountChanged)
+	Q_PROPERTY(QString type READ type WRITE setType)
+	Q_PROPERTY(QString hostName READ hostName WRITE setHostName)
+	Q_PROPERTY(int port READ port WRITE setPort)
+	Q_PROPERTY(QString databaseName READ databaseName WRITE setDatabaseName)
+	Q_PROPERTY(QString userName READ userName WRITE setUserName)
+	Q_PROPERTY(QString password READ password WRITE setPassword)
 
 public:
 	/**
@@ -119,7 +125,7 @@ public:
 	/**
 	 * @brief Close all open connections.
 	 */
-	void closeAll();
+	Q_INVOKABLE void closeAll();
 
 	/**
 	 * @brief Close connection for thread t.
