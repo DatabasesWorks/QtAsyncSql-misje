@@ -25,9 +25,7 @@ friend class SqlTaskPrivate;
 
 public:
 	AsyncQueryResult();
-	virtual ~AsyncQueryResult();
-	AsyncQueryResult(const AsyncQueryResult&);
-	AsyncQueryResult& operator=(const AsyncQueryResult& other);
+	virtual ~AsyncQueryResult() = default;
 
 	/**
 	 * @brief Returns \c true if no error occured in the query.

@@ -10,25 +10,6 @@ AsyncQueryResult::AsyncQueryResult()
 	qRegisterMetaType<AsyncQueryResult>();
 }
 
-AsyncQueryResult::~AsyncQueryResult()
-{
-}
-
-AsyncQueryResult::AsyncQueryResult(const AsyncQueryResult& other)
-{
-	_data = other._data;
-	_record = other._record;
-	_error = other._error;
-}
-
-AsyncQueryResult& AsyncQueryResult::operator=(const AsyncQueryResult& other)
-{
-	_data = other._data;
-	_record = other._record;
-	_error = other._error;
-	return *this;
-}
-
 QSqlError AsyncQueryResult::error() const
 {
 	return _error;
