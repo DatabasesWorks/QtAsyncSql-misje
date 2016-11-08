@@ -62,7 +62,7 @@ public:
 
 	/**
 	 * @brief Returns the value of given row and column name.
-	 * @details If row or col is invalid a empty QVariatn is returned.
+	 * @details If row or col is invalid a empty QVariant is returned.
 	 */
 	QVariant value(int row, const QString &col) const;
 
