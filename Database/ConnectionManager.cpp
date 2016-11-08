@@ -153,8 +153,9 @@ bool ConnectionManager::open(QSqlError *error)
 		return true;
 	}
 
-	QString conname = QString("CNM0x%1") .arg((qlonglong)curThread, 0, 16);
-	QSqlDatabase dbconn = QSqlDatabase::addDatabase(_type, conname);
+	QString conname = QString("CNM0x%1").arg((qlonglong)curThread, 0, 16);
+	QSqlDatabase dbconn = QSqlDatabase::contains(conname) ?
+		QSqlDatabase::database(conname) : QSqlDatabase::addDatabase(_type, conname);
 	if (!dbconn.isValid()) {
 		if (error)
 			*error = dbconn.lastError();
