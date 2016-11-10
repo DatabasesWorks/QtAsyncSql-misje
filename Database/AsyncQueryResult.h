@@ -69,10 +69,32 @@ public:
 	 */
 	QVector<QVector<QVariant>> data() const { return _data; }
 
+	/**
+	 * @brief Returns the object ID of the most recent inserted row
+	 *
+	 * @see QSqlQuery::lastInsertId()
+	 */
+	QVariant lastInsertId() const { return _lastInsertId; }
+	/**
+	 * @brief Returns the query string
+	 * @note A prepared query may not always have its value placeholder
+	 * replaced if the query fails.
+	 */
+	QString queryString() const { return _queryString; }
+	/**
+	 * @brief Returns the number of rows affected by the SQL statement
+	 *
+	 * @see QSqlQuery::numRowsAffected()
+	 */
+	int numRowsAffected() const { return _numRowsAffected; }
+
 private:
 	QVector<QVector<QVariant>> _data;
 	QSqlRecord _record;
 	QSqlError _error;
+	QVariant _lastInsertId;
+	QString _queryString;
+	int _numRowsAffected = -1;
 };
 
 }	//	namespace

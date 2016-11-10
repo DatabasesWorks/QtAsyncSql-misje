@@ -41,6 +41,7 @@ void SqlTaskPrivate::run()
 	if (!conmgr->connectionExists()) {
 		if (!conmgr->open(&result._error))
 		{
+			result._queryString = _query.query;
 			_instance->taskCallback(result);
 			return;
 		}
@@ -73,8 +74,11 @@ void SqlTaskPrivate::run()
 		}
 	}
 
+	result._queryString = query.executedQuery();
 	result._record = query.record();
 	result._error = query.lastError();
+	result._lastInsertId = query.lastInsertId();
+	result._numRowsAffected = query.numRowsAffected();
 	int cols = result._record.count();
 
 	while (query.next()) {
