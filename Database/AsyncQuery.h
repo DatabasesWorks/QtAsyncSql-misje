@@ -45,7 +45,7 @@ public:
 	 * startExec() or startExec(const QString &query) are handled.
 	 */
 
-	typedef enum Mode {
+	enum Mode {
 		/** All queries for this object are started immediately and run in parallel.
 		 * The order in which subsequent queries are executed and finished can not
 		 * be guaranteed. Each query is started as soon as possible.
@@ -62,7 +62,7 @@ public:
 		 * ommited by using this mode.
 		 */
 		Mode_SkipPrevious,
-	} Mode;
+	};
 
 	explicit AsyncQuery(QObject* parent = nullptr);
 	virtual ~AsyncQuery();
@@ -182,11 +182,11 @@ signals:
 	void busyChanged(bool busy);
 
 private:
-	typedef struct QueuedQuery {
+	struct QueuedQuery {
 		bool isPrepared;
 		QString query;
 		QMap <QString, QVariant> boundValues;
-	} QueuedQuery;
+	};
 
 	void startExecIntern();
 	/* use only in locked area */
