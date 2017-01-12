@@ -156,12 +156,29 @@ public:
 	 * });
 	 * \endcode
 	 */
-	template <typename Func1>
-	static inline void startExecOnce(const QString& query, Func1 slot)
+	template <typename Func>
+	static inline void startExecOnce(const QString& query, Func functor)
 	{
 		AsyncQuery * q = new AsyncQuery();
 		q->_deleteOnDone =true;
-		connect(q, &AsyncQuery::execDone, slot);
+		connect(q, &AsyncQuery::execDone, functor);
+		q->startExec(query);
+	}	
+
+	/**
+	 * @brief Convinience function to start a AsyncQuery once with given lambda function
+	 * as result handler.
+	 *
+	 * The connection is automatically destroyed if the sender or the context
+	 * is destroyed.
+	 */
+	template <typename Func>
+	static inline void startExecOnce(const QString& query, const QObject *context,
+			Func functor)
+	{
+		AsyncQuery * q = new AsyncQuery();
+		q->_deleteOnDone =true;
+		connect(q, &AsyncQuery::execDone, context, functor);
 		q->startExec(query);
 	}	
 
