@@ -31,6 +31,11 @@ QSqlError AsyncQueryQMLModel::error() const
 	return _res.error();
 }
 
+AsyncQueryResult AsyncQueryQMLModel::result() const
+{
+	return _res;
+}
+
 void AsyncQueryQMLModel::startExec(const QString &query)
 {
 	_aQuery->startExec(query);

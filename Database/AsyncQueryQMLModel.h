@@ -26,6 +26,7 @@ public:
 	QString queryString() const;
 	QStringList columnNames() const;
 	QSqlError error() const;
+	AsyncQueryResult result() const;
 	void startExec(const QString &query);
 	void clear();
 
