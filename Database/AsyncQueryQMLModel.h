@@ -16,7 +16,7 @@ class AsyncQueryQMLModel : public QAbstractTableModel
 signals:
 	void queryStringChanged(const QString &queryString);
 	void columnNamesChanged(const QStringList &columnNames);
-	void querySucceeded();
+	void querySucceeded(const AsyncQueryResult &result);
 	void queryFailed(const QString &errorMessage);
 
 public:

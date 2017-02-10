@@ -112,7 +112,7 @@ void AsyncQueryQMLModel::onExecDone(const Database::AsyncQueryResult &result)
 	endResetModel();
 
 	if (result.isValid())
-		emit querySucceeded();
+		emit querySucceeded(result);
 	else
 		emit queryFailed(result.error().text());
 }
