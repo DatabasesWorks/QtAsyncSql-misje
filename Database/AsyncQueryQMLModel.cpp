@@ -21,6 +21,11 @@ QString AsyncQueryQMLModel::queryString() const
 	return _aQuery->query();
 }
 
+QStringList AsyncQueryQMLModel::columnNames() const
+{
+	return _columnNames;
+}
+
 QSqlError AsyncQueryQMLModel::error() const
 {
 	return _res.error();

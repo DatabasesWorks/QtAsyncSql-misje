@@ -11,7 +11,7 @@ class AsyncQueryQMLModel : public QAbstractTableModel
 	Q_OBJECT
 	Q_PROPERTY(QString query READ queryString WRITE setQueryString NOTIFY
 			queryStringChanged)
-	Q_PROPERTY(QStringList columnNames MEMBER _columnNames NOTIFY columnNamesChanged)
+	Q_PROPERTY(QStringList columnNames READ columnNames NOTIFY columnNamesChanged)
 
 signals:
 	void queryStringChanged(const QString &queryString);
@@ -24,6 +24,7 @@ public:
 
 	AsyncQuery *asyncQuery() const;
 	QString queryString() const;
+	QStringList columnNames() const;
 	QSqlError error() const;
 	void startExec(const QString &query);
 	void clear();
