@@ -221,19 +221,18 @@ void AsyncQuery::startExecIntern()
 
 void AsyncQuery::incTaskCount()
 {
-	if (_taskCnt == 0) {
-		emit busyChanged(true);
-	}
+	bool busyChanged = _taskCnt == 0;
 	_taskCnt++;
+	if (busyChanged)
+		emit AsyncQuery::busyChanged(true);
 }
 
 void AsyncQuery::decTaskCount()
 {
-	if (_taskCnt == 1) {
-		emit busyChanged(false);
-	}
+	bool busyChanged = _taskCnt == 1;
 	_taskCnt--;
-
+	if (busyChanged)
+		emit AsyncQuery::busyChanged(false);
 }
 
 void AsyncQuery::taskCallback(const AsyncQueryResult& result)
