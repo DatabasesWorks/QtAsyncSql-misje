@@ -48,6 +48,13 @@ void SqlTaskPrivate::run()
 	}
 
 	QSqlDatabase db = conmgr->threadConnection();
+	if (!db.isOpen() && !db.open())
+	{
+		result._queryString = _query.query;
+		result._error = db.lastError();
+		_instance->taskCallback(result);
+		return;
+	}
 
 	//delay query
 	if (_delayMs > 0) {
