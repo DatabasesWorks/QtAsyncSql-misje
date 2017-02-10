@@ -161,7 +161,8 @@ bool ConnectionManager::open(QSqlError *error)
 			*error = dbconn.lastError();
 
 		dbconn = {};
-		dbconn.removeDatabase(conname);
+		QSqlDatabase::removeDatabase(conname);
+		_conns.remove(curThread);
 		return false;
 	}
 	dbconn.setHostName(_hostName);
@@ -179,6 +180,9 @@ bool ConnectionManager::open(QSqlError *error)
 		if (error)
 			*error = dbconn.lastError();
 
+		dbconn = {};
+		QSqlDatabase::removeDatabase(conname);
+		_conns.remove(curThread);
 		return false;
 	}
 
