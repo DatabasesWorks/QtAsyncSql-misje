@@ -74,7 +74,12 @@ void SqlTaskPrivate::run()
 	}
 	if (succ) {
 		if (_query.isPrepared) {
-			query.exec();
+			if (_query.isBatch) {
+				query.execBatch();
+			}
+			else {
+				query.exec();
+			}
 		}
 		else {
 			query.exec(_query.query);
@@ -117,6 +122,7 @@ AsyncQuery::AsyncQuery(QObject* parent /* = nullptr */)
 	, _delayMs(0)
 	, _mode(Mode_Parallel)
 	, _taskCnt(0)
+	, _isBatch(false)
 {
 }
 
@@ -158,14 +164,34 @@ void AsyncQuery::prepare(const QString &query)
 	_curQuery.query = query;
 }
 
-void AsyncQuery::bindValue(const QString &placeholder, const QVariant &val)
+bool AsyncQuery::bindValue(const QString &placeholder, const QVariant &val)
 {
+	if (_isBatch)
+		return false;
+
 	_curQuery.boundValues[placeholder] = val;
+	return true;
+}
+
+bool AsyncQuery::bindBatchValue(const QString &placeholder, const QVariantList &values)
+{
+	if (values.isEmpty())
+		return false;
+
+	QVariant::Type type = values.first().type();
+	for (const auto &val : values)
+		if (val.type() != type)
+			return false;
+
+	bindValue(placeholder, values);
+	_isBatch = true;
+	return true;
 }
 
 void AsyncQuery::startExec()
 {
 	_curQuery.isPrepared = true;
+	_curQuery.isBatch = _isBatch;
 	startExecIntern();
 }
 

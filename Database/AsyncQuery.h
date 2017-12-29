@@ -92,8 +92,24 @@ public:
 
 	/**
 	 * @brief BindValue for prepared query.
+	 *
+	 * @returns false if bindBatchValue() has been called, otherwise true
 	 */
-	void bindValue(const QString &placeholder, const QVariant &val);
+	bool bindValue(const QString &placeholder, const QVariant &val);
+
+	/**
+	 * @brief Bind list of values for prepared batch query
+	 *
+	 * The query will fail if
+	 * - a mix of bindValue() and bindBatchValue() is called
+	 * - \p values does not have the same size as \p values in other
+	 *   bindBatchValue() calls
+	 *
+	 * @returns false if \p values is empty, if it contains a mix of data
+	 * types, if its size is different from previous calls or if bindValue()
+	 * has been called, otherwise true
+	 */
+	bool bindBatchValue(const QString &placeholder, const QVariantList &values);
 
 	/**
 	 * @brief Start a prepared query execution set with prepare(const QString &query);
@@ -201,6 +217,7 @@ signals:
 private:
 	struct QueuedQuery {
 		bool isPrepared;
+		bool isBatch;
 		QString query;
 		QMap <QString, QVariant> boundValues;
 	};
@@ -224,6 +241,7 @@ private:
 	ulong _delayMs;
 	Mode _mode;
 	int _taskCnt;
+	bool _isBatch;
 
 	AsyncQueryResult _result;
 	QQueue <QueuedQuery> _ququ;
