@@ -9,6 +9,7 @@ class AsyncQuery;
 class AsyncQueryQMLModel : public QAbstractTableModel
 {
 	Q_OBJECT
+	Q_ENUMS(PrefixMode)
 	Q_PROPERTY(QString query READ queryString WRITE setQueryString NOTIFY
 			queryStringChanged)
 	Q_PROPERTY(QStringList columnNames READ columnNames NOTIFY columnNamesChanged)
@@ -20,6 +21,13 @@ signals:
 	void queryFailed(const QString &errorMessage);
 
 public:
+	enum PrefixMode
+	{
+		PrefixTableNameAlways,
+		PrefixTableNameOnDuplicate,
+		PrefixTableNameNever,
+	};
+
 	explicit AsyncQueryQMLModel(QObject *parent = nullptr);
 
 	AsyncQuery *asyncQuery() const;
@@ -27,6 +35,8 @@ public:
 	QStringList columnNames() const;
 	QSqlError error() const;
 	AsyncQueryResult result() const;
+	PrefixMode prefixMode() const;
+
 	void startExec(const QString &query);
 	void clear();
 
@@ -37,6 +47,7 @@ public:
 	QHash<int, QByteArray> roleNames() const override;
 
 	void setQueryString(const QString &query);
+	void setPrefixMode(PrefixMode prefixMode);
 
 public slots:
 	void bindValue(const QString &name, const QVariant &value);
@@ -46,11 +57,15 @@ private:
 	void onExecDone(const Database::AsyncQueryResult &result);
 	void updateRoles();
 	void setColumnNames(const QStringList &columnNames);
+	void updateDuplicateColumnNames(const QSqlRecord &record);
+	QString columnName(const QSqlField &field);
 
 	QHash<int, QByteArray> _roleNames;
 	QHash<QString, int> _roleIDs;
 	QStringList _columnNames;
 	AsyncQueryResult _res;
 	AsyncQuery *_aQuery;
+	PrefixMode _prefixMode;
+	QHash<QString, QString> _duplicateColumnNames;
 };
 };

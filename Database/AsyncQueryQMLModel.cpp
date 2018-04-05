@@ -1,12 +1,16 @@
 #include "AsyncQueryQMLModel.h"
 #include "AsyncQuery.h"
 using namespace Database;
+#include <QSqlField>
+#include <QStringBuilder>
 
 static const int firstRole = Qt::UserRole + 1;
+
 
 AsyncQueryQMLModel::AsyncQueryQMLModel(QObject *parent)
 	: QAbstractTableModel(parent)
 	, _aQuery(new AsyncQuery(this))
+	, _prefixMode(PrefixTableNameOnDuplicate)
 {
 	connect(_aQuery, &AsyncQuery::execDone, this, &AsyncQueryQMLModel::onExecDone);
 }
@@ -34,6 +38,11 @@ QSqlError AsyncQueryQMLModel::error() const
 AsyncQueryResult AsyncQueryQMLModel::result() const
 {
 	return _res;
+}
+
+AsyncQueryQMLModel::PrefixMode AsyncQueryQMLModel::prefixMode() const
+{
+	return _prefixMode;
 }
 
 void AsyncQueryQMLModel::startExec(const QString &query)
@@ -94,6 +103,15 @@ void AsyncQueryQMLModel::setQueryString(const QString &query)
 	emit queryStringChanged(query);
 }
 
+void AsyncQueryQMLModel::setPrefixMode(PrefixMode prefixMode)
+{
+	if (prefixMode == _prefixMode)
+		return;
+
+	_prefixMode = prefixMode;
+	updateRoles();
+}
+
 void AsyncQueryQMLModel::bindValue(const QString &name, const QVariant &value)
 {
 	asyncQuery()->bindValue(name, value);
@@ -123,9 +141,11 @@ void AsyncQueryQMLModel::updateRoles()
 	_roleIDs.clear();
 	auto record = _res.headRecord();
 	QStringList columnNames;
+
+	updateDuplicateColumnNames(record);
 	for (int i = 0; i < record.count(); ++i)
 	{
-		auto name = record.fieldName(i);
+		auto name = columnName(record.field(i));
 		auto id = firstRole + i;
 		_roleNames[id] = name.toUtf8();
 		_roleIDs[name] = id;
@@ -142,4 +162,32 @@ void AsyncQueryQMLModel::setColumnNames(const QStringList &columnNames)
 
 	_columnNames = columnNames;
 	emit columnNamesChanged(_columnNames);
+}
+
+void AsyncQueryQMLModel::updateDuplicateColumnNames(const QSqlRecord &record)
+{
+	_duplicateColumnNames.clear();
+
+	QSet<QString> columnNames;
+	for (int i = 0; i < record.count(); ++i)
+	{
+		auto name = record.fieldName(i);
+		if (columnNames.contains(name))
+			_duplicateColumnNames[name] = record.field(i).tableName();
+
+		columnNames << name;
+	}
+}
+
+QString AsyncQueryQMLModel::columnName(const QSqlField &field)
+{
+	if (_prefixMode == PrefixTableNameNever)
+		return field.name();
+	else if (_prefixMode == PrefixTableNameAlways)
+		return field.tableName() % '.' % field.name();
+
+	if (_duplicateColumnNames.contains(field.name()))
+		return field.tableName() % '.' % field.name();
+
+	return field.name();
 }
