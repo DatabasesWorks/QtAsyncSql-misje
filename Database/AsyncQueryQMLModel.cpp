@@ -10,7 +10,9 @@ static const int firstRole = Qt::UserRole + 1;
 AsyncQueryQMLModel::AsyncQueryQMLModel(QObject *parent)
 	: QAbstractTableModel(parent)
 	, _aQuery(new AsyncQuery(this))
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	, _prefixMode(PrefixTableNameOnDuplicate)
+#endif
 {
 	connect(_aQuery, &AsyncQuery::execDone, this, &AsyncQueryQMLModel::onExecDone);
 }
@@ -40,10 +42,12 @@ AsyncQueryResult AsyncQueryQMLModel::result() const
 	return _res;
 }
 
+#if SUPPORTS_QSQLQUERY_TABLENAME
 AsyncQueryQMLModel::PrefixMode AsyncQueryQMLModel::prefixMode() const
 {
 	return _prefixMode;
 }
+#endif
 
 void AsyncQueryQMLModel::startExec(const QString &query)
 {
@@ -103,6 +107,7 @@ void AsyncQueryQMLModel::setQueryString(const QString &query)
 	emit queryStringChanged(query);
 }
 
+#if SUPPORTS_QSQLQUERY_TABLENAME
 void AsyncQueryQMLModel::setPrefixMode(PrefixMode prefixMode)
 {
 	if (prefixMode == _prefixMode)
@@ -111,6 +116,7 @@ void AsyncQueryQMLModel::setPrefixMode(PrefixMode prefixMode)
 	_prefixMode = prefixMode;
 	updateRoles();
 }
+#endif
 
 void AsyncQueryQMLModel::bindValue(const QString &name, const QVariant &value)
 {
@@ -142,7 +148,9 @@ void AsyncQueryQMLModel::updateRoles()
 	auto record = _res.headRecord();
 	QStringList columnNames;
 
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	updateDuplicateColumnNames(record);
+#endif
 	for (int i = 0; i < record.count(); ++i)
 	{
 		auto name = columnName(record.field(i));
@@ -164,6 +172,7 @@ void AsyncQueryQMLModel::setColumnNames(const QStringList &columnNames)
 	emit columnNamesChanged(_columnNames);
 }
 
+#if SUPPORTS_QSQLQUERY_TABLENAME
 void AsyncQueryQMLModel::updateDuplicateColumnNames(const QSqlRecord &record)
 {
 	_duplicateColumnNames.clear();
@@ -178,9 +187,11 @@ void AsyncQueryQMLModel::updateDuplicateColumnNames(const QSqlRecord &record)
 		columnNames << name;
 	}
 }
+#endif
 
 QString AsyncQueryQMLModel::columnName(const QSqlField &field)
 {
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	if (_prefixMode == PrefixTableNameNever)
 		return field.name();
 	else if (_prefixMode == PrefixTableNameAlways)
@@ -188,6 +199,7 @@ QString AsyncQueryQMLModel::columnName(const QSqlField &field)
 
 	if (_duplicateColumnNames.contains(field.name()))
 		return field.tableName() % '.' % field.name();
+#endif
 
 	return field.name();
 }

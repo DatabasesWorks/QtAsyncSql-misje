@@ -2,6 +2,8 @@
 #include <QAbstractTableModel>
 #include "AsyncQueryResult.h"
 
+#define SUPPORTS_QSQLQUERY_TABLENAME (QT_VERSION >= QT_VERSION_CHECK(5,10,0))
+
 namespace Database
 {
 class AsyncQuery;
@@ -20,6 +22,7 @@ signals:
 	void queryFailed(const QString &errorMessage);
 
 public:
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	enum PrefixMode
 	{
 		PrefixTableNameAlways,
@@ -27,6 +30,7 @@ public:
 		PrefixTableNameNever,
 	};
 	Q_ENUM(PrefixMode)
+#endif
 
 	explicit AsyncQueryQMLModel(QObject *parent = nullptr);
 
@@ -35,7 +39,9 @@ public:
 	QStringList columnNames() const;
 	QSqlError error() const;
 	AsyncQueryResult result() const;
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	PrefixMode prefixMode() const;
+#endif
 
 	void startExec(const QString &query);
 	void clear();
@@ -47,7 +53,9 @@ public:
 	QHash<int, QByteArray> roleNames() const override;
 
 	void setQueryString(const QString &query);
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	void setPrefixMode(PrefixMode prefixMode);
+#endif
 
 public slots:
 	void bindValue(const QString &name, const QVariant &value);
@@ -57,7 +65,9 @@ private:
 	void onExecDone(const Database::AsyncQueryResult &result);
 	void updateRoles();
 	void setColumnNames(const QStringList &columnNames);
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	void updateDuplicateColumnNames(const QSqlRecord &record);
+#endif
 	QString columnName(const QSqlField &field);
 
 	QHash<int, QByteArray> _roleNames;
@@ -65,7 +75,9 @@ private:
 	QStringList _columnNames;
 	AsyncQueryResult _res;
 	AsyncQuery *_aQuery;
+#if SUPPORTS_QSQLQUERY_TABLENAME
 	PrefixMode _prefixMode;
+#endif
 	QHash<QString, QString> _duplicateColumnNames;
 };
 };
