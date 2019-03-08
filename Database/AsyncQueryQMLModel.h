@@ -9,7 +9,6 @@ class AsyncQuery;
 class AsyncQueryQMLModel : public QAbstractTableModel
 {
 	Q_OBJECT
-	Q_ENUMS(PrefixMode)
 	Q_PROPERTY(QString query READ queryString WRITE setQueryString NOTIFY
 			queryStringChanged)
 	Q_PROPERTY(QStringList columnNames READ columnNames NOTIFY columnNamesChanged)
@@ -27,6 +26,7 @@ public:
 		PrefixTableNameOnDuplicate,
 		PrefixTableNameNever,
 	};
+	Q_ENUM(PrefixMode)
 
 	explicit AsyncQueryQMLModel(QObject *parent = nullptr);
 
