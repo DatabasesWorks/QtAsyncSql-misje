@@ -1,5 +1,7 @@
 # QtAsyncSql
 QT based classes to support asynchronous and threaded SQL queries.
+
+Imported from: https://github.com/misje/QtAsyncSql
  
 ## Introduction
 
